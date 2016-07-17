@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+	<script>
+		function SuperClass(){
+			this.name="liuheng";
+		}
+		SuperClass.prototype.getName=function(){
+			alert(this.name);
+		}
+		function ChildClass(){
+			SuperClass.call(this ,arguments);
+		}
+		//way1  childClass.prototype = new SuperClass;  合理，但是浪费
+//way2  childClass.prototype = SuperClass.prototype;  不合理，下层会影响上层
+//way3  ChildClass.prototype = Object.create(SuperClass.prototype)
+		ChildClass.prototype=Object.create(SuperClass.prototype);
+		var obj =new ChildClass;
+		obj.getName();
+		
+//		function SubChildClass(){
+//			ChildClass.call(this ,arguments);
+//			this.name="SubChildClass";
+//		}
+//		SubChildClass.prototype=Object.create(ChildClass.prototype);
+//		var obj1 =new SubChildClass;
+//		obj1.getName();
+	</script>
+</html>

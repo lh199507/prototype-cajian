@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>MVC</title>
+	</head>
+	<body>
+	</body>
+	<script>
+		var BaseClass=function(){};
+		
+		BaseClass.prototype.init=function(){};
+		
+		BaseClass.extends=function(config){//超类
+			var self=this;
+			var temp=function(){self.call(this,arguments)};//得到超类的属性
+			temp.prototype=Object.create(self.prototype);//继承超类的方法
+			var child=function(){};
+			child.prototype=new temp;
+			child.extends=arguments.callee;
+			for(var i in config){
+				child.prototype[i]=config[i];
+			}
+			child.prototype.constructor=child;
+			return child;
+		};
+		
+		var Model= BaseClass.extends({//模型 数据
+			getData :function(){
+				return {name:"liuheng"}
+			},
+			setData : {	
+			}
+		});
+		
+		var View=BaseClass.extends({//视图 前端的界面及交互
+			tempview : '<input name="name" value={name}>',
+			renderTo :"body",
+			render : function(data){
+				var html=this.tempview.replace(/{(\w+)}/g ,function(){
+					return data[arguments[1]];
+				})
+				document.querySelector(this.renderTo).innerHTML=html;
+			}
+		});
+		
+		var Controller=BaseClass.extends({
+		//控制器 后台的应用程序，接受前端的require,再在数据库中调取数据返还给前端
+			Model : Model,
+			View : View,
+			init : function(){
+				var model=new Model();
+				var view=new View();
+				view.render(model.getData())
+			}
+		})
+		var ctrl=new Controller()
+		ctrl.init()
+	</script>
+</html>
